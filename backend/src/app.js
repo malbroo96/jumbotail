@@ -11,11 +11,11 @@ dotenv.config();
 const app = express();
 
 // Middleware
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || "https://jumbotail.vercel.app/",
-  credentials: true,
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: process.env.FRONTEND_URL || "https://jumbotail.vercel.app/",
+//   credentials: true,
+// };
+app.use(cors("*"));
 app.use(express.json());
 
 // MongoDB connection (IMPORTANT PART)
