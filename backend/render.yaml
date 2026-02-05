@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm install",
+  "startCommand": "npm start",
+  "env": {
+    "MONGO_URI": "@mongo_uri",
+    "DB_NAME": "ecommerce_search",
+    "FRONTEND_URL": "@frontend_url",
+    "NODE_ENV": "production"
+  }
+}
