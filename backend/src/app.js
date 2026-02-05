@@ -1,13 +1,60 @@
-const express = require("express");
-const productRoutes = require("./routes/productRoutes");
-const searchRoutes = require("./routes/searchRoutes");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+
+import productRoutes from "./routes/productRoutes.js";
+import searchRoutes from "./routes/searchRoutes.js";
+import debugRoutes from "./routes/debugRoutes.js";
+
+dotenv.config();
 
 const app = express();
+
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-app.use("/products", productRoutes);
-app.use("/search", searchRoutes);
+// MongoDB connection (IMPORTANT PART)
+const mongoUri = process.env.MONGO_URI;
+const dbName = process.env.DB_NAME || "ecommerce_search";
 
-app.get("/", (req, res) => res.send("jumbotail backend (placeholder)"));
+if (!mongoUri) {
+  console.error("❌ MONGO_URI is not set. Please set it in .env");
+} else {
+  mongoose
+    .connect(mongoUri, { dbName })
+    .then(() => {
+      console.log(
+        `✅ MongoDB connected — db: ${mongoose.connection.name} @ ${mongoose.connection.host}`,
+      );
+    })
+    .catch((error) => {
+      console.error("❌ MongoDB connection failed:", error);
+      // Do not force-exit in production by default; keep process alive for diagnostics
+      // process.exit(1);
+    });
 
-module.exports = app;
+  // Helpful connection events
+  mongoose.connection.on("error", (err) => {
+    console.error("Mongoose connection error:", err);
+  });
+
+  mongoose.connection.on("disconnected", () => {
+    console.warn("Mongoose disconnected");
+  });
+}
+
+// Routes
+app.use("/api/v1/product", productRoutes);
+app.use("/api/v1/search", searchRoutes);
+
+// Temporary debug endpoints (remove when finished)
+app.use("/__debug", debugRoutes);
+
+// Health check (optional but very useful)
+app.get("/health", (req, res) => {
+  res.json({ status: "OK" });
+});
+
+export default app;
