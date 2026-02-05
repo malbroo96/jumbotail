@@ -1,8 +1,15 @@
-// searchController.js — search endpoint placeholder
-const rankingService = require("../services/rankingService");
+import Product from "../models/Product.js";
+import { rankProducts } from "../services/rankingService.js";
 
-exports.search = (req, res) => {
-  const q = req.query.q || "";
-  const results = rankingService.rank([]); // placeholder
-  res.json({ query: q, results });
+export const searchProducts = async (req, res) => {
+  try {
+    const { query = "" } = req.query;
+
+    const products = await Product.find({});
+    const rankedProducts = rankProducts(products, query);
+
+    res.json({ data: rankedProducts });
+  } catch (err) {
+    res.status(500).json({ message: "Search failed" });
+  }
 };

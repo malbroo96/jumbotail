@@ -1,8 +1,12 @@
-const express = require("express");
+import express from "express";
+import {
+  createProduct,
+  updateMetadata
+} from "../controllers/productController.js";
+
 const router = express.Router();
-const controller = require("../controllers/productController");
 
-router.get("/", controller.getProducts);
-router.get("/:id", controller.getProduct);
+router.post("/", createProduct);
+router.put("/meta-data", updateMetadata);
 
-module.exports = router;
+export default router;
