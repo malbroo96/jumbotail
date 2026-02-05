@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import ProductCard from "../components/ProductCard";
 import { useDebounce } from "../hooks/useDebounceThrottle";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const API_URL = import.meta.env.VITE_API_URL || "https://jumbotail.onrender.com";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
